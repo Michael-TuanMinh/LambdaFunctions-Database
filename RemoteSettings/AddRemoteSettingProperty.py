@@ -14,20 +14,12 @@ def lambda_handler(event, context):
                 if 'Item' in response:
                     item = response['Item']
                     item = str(item)
-                    return {
-                        'statusCode': 200,
-                        'body': json.dumps(item)
-                    }
+                    return send_message(200, item)
                 else:
-                    return {
-                        'statusCode': 400,
-                        'body': json.dumps('Couldnt find ' + mGameName)
-                    }
+                    return send_message(400, 'Couldnt find ' + mGameName)
             else:
-                return {
-                    'statusCode': 400,
-                    'body': json.dumps('Request GameName params')
-                }
+                return send_message(400, 'Request GameName params')
+                
     elif event['httpMethod'] == 'PUT':
         if 'body' in event:
             recieveData = event['body']
@@ -47,22 +39,18 @@ def lambda_handler(event, context):
                             ':val': mGameValue
                         }
                     )
-                    return {
-                        'statusCode': 200,
-                        'body': '{"result": "' + mGameName + ' updated '  + mGameProperty + ' successfully"}'
-                    }
+                    return send_message(200, '{"result": "' + mGameName + ' updated '  + mGameProperty + ' successfully"}')
                 else :
-                    return {
-                        'statusCode': 400,
-                        'body': json.dumps('Couldnt find ' + mGameName)
-                    }
+                    return send_message(400, 'Couldnt find ' + mGameName)
             else :
-                return {
-                    'statusCode': 400,
-                    'body': json.dumps('Missing Game Name, Property, or Value')
-                }
+                return send_message(400, 'Missing Game Name, Property, or Value')
+                
         else :
-            return {
-                    'statusCode': 400,
-                    'body': json.dumps('Recieved Data is Empty')
-                }
+            return send_message(400, 'Recieved Data is Empty')
+
+   
+def send_message(code, message):
+    return {
+        'statusCode': code,
+        'body': json.dumps(message)
+    }
